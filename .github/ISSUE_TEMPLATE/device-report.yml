@@ -3,38 +3,74 @@ description: Add or correct what is known about a Boox model/firmware
 title: "Device: <model> <firmware>"
 labels: ["device"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not post serial numbers, MAC addresses, account names, e-mails, IP addresses or server URLs.
+        Mark anything you did not test as untested.
   - type: input
     id: model
-    attributes:
-      label: Model
-      placeholder: "Boox Note Air 5 C"
+    attributes: {label: Model, placeholder: "Boox Note Air 5 C"}
     validations: {required: true}
   - type: input
     id: firmware
+    attributes: {label: "Firmware (Settings -> About Device -> Version)"}
+    validations: {required: true}
+  - type: input
+    id: android
+    attributes: {label: "Android version and API (adb shell getprop ro.build.version.release / .sdk)"}
+    validations: {required: true}
+  - type: input
+    id: abi
+    attributes: {label: "ABI list (adb shell getprop ro.product.cpu.abilist)"}
+    validations: {required: true}
+  - type: dropdown
+    id: display
     attributes:
-      label: Firmware (Settings → About Device → Version) and Android version
+      label: Display
+      options: ["monochrome", "color (Kaleido)"]
+    validations: {required: true}
+  - type: input
+    id: host
+    attributes: {label: "Host OS you ran adb/build on (macOS, Linux, WSL)"}
     validations: {required: true}
   - type: textarea
     id: devmode
     attributes:
       label: How to reach developer options and USB debugging
-      description: Exact screens you tap, in order.
+      description: The exact screens you tap, in order.
     validations: {required: true}
-  - type: textarea
-    id: home
+  - type: dropdown
+    id: launcher
     attributes:
-      label: Did the launcher step work?
-      description: Output of `pm set-home-activity io.github.michalkozik.koho/.Home` and of the HOME `resolve-activity` command.
+      label: Launcher step (pm set-home-activity for koho)
+      options: ["worked", "failed", "untested"]
+    validations: {required: true}
+  - type: dropdown
+    id: sleep
+    attributes:
+      label: Home still opens KOReader after sleep/wake and reboot
+      options: ["yes", "no", "untested"]
+    validations: {required: true}
+  - type: dropdown
+    id: storage
+    attributes:
+      label: KOReader can read/write /sdcard/Books and keep state
+      options: ["yes", "no", "untested"]
+    validations: {required: true}
+  - type: dropdown
+    id: freeze
+    attributes:
+      label: Auto-freeze handling
+      options: ["turned off in App Management, works", "frozen apps again after a while", "untested"]
+    validations: {required: true}
   - type: textarea
     id: notes
     attributes:
-      label: Notes app backup path and anything different
+      label: Notes app backup path, color-screen observations (contrast, refresh) and anything different
   - type: dropdown
     id: status
     attributes:
-      label: Status
+      label: Overall status
       options: ["verified (full setup confirmed)", "partial", "untested"]
     validations: {required: true}
-  - type: markdown
-    attributes:
-      value: Do not post serial numbers, MAC addresses, account names or server URLs.

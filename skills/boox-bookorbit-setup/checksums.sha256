@@ -1,0 +1,7 @@
+# SHA-256 of pinned downloads (verified against the SHA-1 values in Google's repository2-3.xml on 2026-11-05).
+# Format: <sha256>  <file name>  (same as `shasum -a 256`). URL base: https://dl.google.com/android/repository/
+e858c4b60069d0431051b225d384413b1643e1289b00a4825aed347f25bd510f  build-tools_r34-linux.zip
+76bf668fe037b1a69197e298ddae5633d4d7f0f41af7ed17e537c80c1ed8a6f3  build-tools_r34-macosx.zip
+f3f5b75744dbf6ee6ed3e8174a71e513bfee502d0bc3463ea97e517bff68d84e  platform-30_r03.zip
+ee39ad5967e95c2a07f04dbcbde96b1a0c916ba376096db5d2f498b7727a5d1d  platform-tools_r37.0.1-darwin.zip
+d230f13842f60f782a8645f9c813f8f845bf36089ea7289f28c48f17979313f1  platform-tools_r37.0.1-linux.zip
