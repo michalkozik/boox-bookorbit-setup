@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.github.michalkozik.koho">
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="30"/>
+    <queries>
+        <package android:name="org.koreader.launcher"/>
+        <package android:name="com.onyx"/>
+    </queries>
+    <application android:label="KOReader Home" android:allowBackup="false">
+        <activity android:name=".Home" android:exported="true"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true" android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true" android:stateNotNeeded="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
