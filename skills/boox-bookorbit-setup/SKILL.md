@@ -128,3 +128,10 @@ Status: designed, NOT built or tested. Do not claim it works.
 - BookOrbit sync state (`settings/bookorbit_sync_state.lua`) has a `bookId` per opened book and no old paths.
 - The server shows the progress (`user_book_status`, `reading_progress` tables) or the user checks in the web UI.
 - Notes backup still exists on the Mac and the Notes app was not touched.
+
+## 9. Offer to share device data
+
+When the setup ends on a model/firmware not listed in `docs/devices.md`, offer to draft a device report
+for the user (model, firmware, Android version, exact path to developer options, whether the launcher
+step worked, Notes backup path, what was tested vs untested). Remove serial numbers, MAC addresses,
+accounts and server URLs first, show the draft, and publish it only if the user agrees.
