@@ -1,7 +1,7 @@
 # boox-bookorbit-setup
 
 A [Claude Code](https://claude.com/claude-code) skill that sets up an **Onyx Boox** e-ink reader
-as a dedicated BookOrbit + [KOReader](https://github.com/koreader/koreader) device:
+as a dedicated [BookOrbit](https://bookorbit.app) + [KOReader](https://github.com/koreader/koreader) device:
 
 - **Home press opens KOReader** (a tiny launcher, `koho`, replaces the stock Boox home screen).
 - KOReader opens the **BookOrbit dashboard** at start (continue reading, recently added, streak).
@@ -15,6 +15,35 @@ device UI can do (developer mode, backup, disabling Boox app auto-freeze).
 > **Status:** built and verified on a Boox **Go 6** (Android 11, firmware 4.2). A **Note Air 5C**
 > (Android 15) was only inventoried, not configured. Anything marked *untested* in the skill is a plan,
 > not a result. Not affiliated with Onyx, BookOrbit or KOReader.
+
+## Why BookOrbit: a bookshelf that stays at home
+
+[BookOrbit](https://bookorbit.app) ([source](https://github.com/bookorbit/bookorbit), AGPL-3.0) is a
+self-hosted library and reading platform for ebooks, PDFs, audiobooks and comics. You run it yourself
+(Docker, on a home server, NAS-adjacent box or VPS) and point it at a folder of your own files. Your
+library, your reading progress, your highlights and your user accounts live on hardware you control,
+not in a vendor's cloud account that can change terms, lose a catalogue or close.
+
+What that gives an e-ink reader:
+
+- **A KOReader plugin** with a catalog browser, download, and two-way sync of progress and annotations,
+  plus **OPDS** and **Kobo sync** for other devices and apps.
+- **Multi-user** with per-user permissions and isolated reading data, and **OIDC/SSO** support
+  (Authentik, Keycloak, Authelia) so a household shares one shelf with separate accounts.
+- **Open formats and plain files:** your books stay ordinary files in a folder you can back up, copy or
+  move; nothing is locked into a proprietary reader.
+
+Honest trade-offs: you run and update the server, and you back it up yourself. Metadata lookups can
+contact external providers depending on your settings, and exposing the server to the internet (for
+example through a tunnel or reverse proxy) means that traffic leaves your home network. If you keep it
+on your LAN or behind a VPN, the library stays strictly at home. NAS network mounts (SMB/NFS) are not
+supported by BookOrbit as a book path according to its README.
+
+References:
+- Website and docs: https://bookorbit.app, [What is BookOrbit](https://bookorbit.app/what-is-bookorbit),
+  [Installation](https://bookorbit.app/installation)
+- Source and license: https://github.com/bookorbit/bookorbit
+- KOReader: https://github.com/koreader/koreader
 
 ## Install the skill
 
