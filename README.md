@@ -1,5 +1,16 @@
 # boox-bookorbit-setup
 
+## Table of contents
+
+- [Why BookOrbit: a bookshelf that stays at home](#why-bookorbit-a-bookshelf-that-stays-at-home)
+- [Install the skill](#install-the-skill)
+- [How to use it](#how-to-use-it)
+- [What is in this repo](#what-is-in-this-repo)
+- [Safety, honestly](#safety-honestly)
+- [Help support more devices](#help-support-more-devices)
+- [Known limitations](#known-limitations)
+- [License](#license)
+
 A [Claude Code](https://claude.com/claude-code) skill that sets up an **Onyx Boox** e-ink reader
 as a dedicated [BookOrbit](https://bookorbit.app) + [KOReader](https://github.com/koreader/koreader) device:
 
