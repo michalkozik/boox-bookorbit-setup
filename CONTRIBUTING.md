@@ -4,7 +4,7 @@ The most useful contribution is **device data**: Boox firmware differs a lot bet
 hardest part for a newcomer is simply getting to developer options and USB debugging.
 
 ## Add or correct a device
-1. Read [docs/devices.md](docs/devices.md) and check whether your model and firmware are listed.
+1. Read [the device table](skills/boox-bookorbit-setup/references/devices.md) and check whether your model and firmware are listed.
 2. Open a **Device report** issue, or send a pull request that adds or fixes a row. Describe the
    developer-options path as the exact screens you tap (for example "Apps tab → hamburger menu → …").
 3. Say what you actually tested. Mark anything you did not verify as *untested*. Wrong confident
@@ -16,8 +16,18 @@ hardest part for a newcomer is simply getting to developer options and USB debug
   no factory reset.
 - The launcher source is `skills/boox-bookorbit-setup/assets/koho/`. Keep it small; verify with
   `skills/boox-bookorbit-setup/scripts/build-koho.sh`.
-- Do not commit APKs, keystores, serial numbers, account data or server URLs.
+- Do not commit APKs, keystores, serial numbers, account data, backups, logs or server URLs. CI validates the
+  device table and rejects e-mails, MAC/IP addresses and URLs in it.
 - Say in the pull request which device and firmware you tested on.
 
 ## Reporting data loss
 If a step in the skill could destroy data on your device, open an issue marked **safety** straight away.
+
+## Checks to run before a pull request
+```bash
+cd skills/boox-bookorbit-setup
+python3 -I -m unittest discover -s tests
+python3 -I scripts/check-devices.py
+shellcheck scripts/*.sh
+scripts/build-koho.sh        # needs JDK 11+, downloads checksum-pinned tools
+```

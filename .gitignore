@@ -1,4 +1,18 @@
+# build and signing material
 *.apk
 *.jks
+*.keystore
+*.p12
+*.pem
+*.pass
+# backups, logs and reports can contain notes, tokens and server data
+backup*/
+*-backup*/
+.rewrite-backup-*/
+*.log
+reports/
+MANIFEST.txt
+.env
+.env.*
 .DS_Store
 __pycache__/

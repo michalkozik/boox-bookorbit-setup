@@ -60,30 +60,40 @@ References:
 
 ```bash
 git clone https://github.com/michalkozik/boox-bookorbit-setup.git
-cp -R boox-bookorbit-setup/skills/boox-bookorbit-setup ~/.claude/skills/
+cd boox-bookorbit-setup
+git log -1 --format='%H %s'    # note the commit you reviewed; update on purpose, not blindly
+cp -R skills/boox-bookorbit-setup ~/.claude/skills/
 ```
 
-Restart Claude Code. The skill loads on its own when you mention Boox, KOReader or BookOrbit on an e-ink
-device. You can also invoke it by name.
+The skill folder is self-contained (procedure, scripts, references, pinned checksums, launcher source), so
+nothing else needs to be copied. Read `SKILL.md` and the scripts before you let an agent run them: they
+install apps on your device. Restart Claude Code. The skill loads on its own when you mention Boox, KOReader
+or BookOrbit on an e-ink device. You can also invoke it by name.
+
+**Host requirements:** macOS or Linux x86_64 (Windows via WSL), a JDK 11+ for building `koho`, and `adb`
+(the skill points to the pinned Google platform-tools).
 
 ## How to use it
 
 1. Connect the Boox by USB (data cable, USB mode *File transfer*), enable developer options and
-   *USB debugging*, accept the RSA prompt on the device.
+   *USB debugging*, accept the RSA prompt on the device. Attach only that one device.
 2. In Claude Code, say something like:
    > Set up my Boox as a BookOrbit reader. Home should open KOReader with the BookOrbit dashboard.
    > My BookOrbit server is `https://books.example.com`.
-3. Claude first does a **read-only inventory** and asks you to **back up your notes in the Notes app**
-   (Notes → menu → Options → Backup and Restore). It will not change anything until you confirm.
+3. Claude first runs a **read-only preflight** (model, Android, ABI, storage, packages, current Home) and
+   asks you to **back up your notes in the Notes app** (Notes → menu → Options → Backup and Restore). It pulls
+   the backup and checks device and host SHA-256, and it will not change anything until you confirm.
 4. It then installs KOReader, the BookOrbit plugin and the ZenOS interface, sets the book folder, builds
-   and installs `koho`, makes it the default home app, and configures the dashboard autostart.
+   and installs `koho`, makes it the default home app step by step, and configures the dashboard autostart.
+   Before each change it re-checks that it is still talking to the same device.
 5. You do three things on the device: log in to the BookOrbit plugin, turn **off Boox auto-freeze** for
    KOReader and `koho` (Apps → App Management), and confirm what you see on screen.
 
-Revert the launcher at any time, without touching data:
+Revert the launcher at any time, without touching data (use the Home component that preflight recorded; on
+Boox it is usually this one):
 
 ```bash
-adb shell pm set-home-activity com.onyx/.StartupActivity
+adb -s SERIAL shell pm set-home-activity com.onyx/.StartupActivity
 ```
 
 ## What is in this repo
@@ -91,35 +101,48 @@ adb shell pm set-home-activity com.onyx/.StartupActivity
 | Path | What |
 |---|---|
 | `skills/boox-bookorbit-setup/SKILL.md` | the procedure Claude follows |
-| `skills/boox-bookorbit-setup/scripts/build-koho.sh` | builds the `koho` launcher APK (JDK + Android build-tools from Google) |
-| `skills/boox-bookorbit-setup/scripts/rewrite-koreader-paths.py` | fixes book paths in KOReader state after moving books |
-| `skills/boox-bookorbit-setup/assets/koho/` | launcher source (one activity, ~25 lines) |
-| `docs/lessons-learned.md` | pitfalls and mistakes from the original setup |
-| `docs/devices.md` | supported models and how to reach developer options on each |
+| `skills/boox-bookorbit-setup/scripts/preflight.sh` | read-only device check, binds work to one device |
+| `skills/boox-bookorbit-setup/scripts/verify-notes-backup.sh` | pulls and hash-verifies the in-app Notes backup |
+| `skills/boox-bookorbit-setup/scripts/build-koho.sh` | builds the `koho` launcher (pinned, checksum-verified toolchain, stable signing key) |
+| `skills/boox-bookorbit-setup/scripts/rewrite-koreader-paths.py` | dry-run-first, validated path rewrite for KOReader state files |
+| `skills/boox-bookorbit-setup/scripts/check-devices.py` | validates the device table |
+| `skills/boox-bookorbit-setup/checksums.sha256` | pinned SHA-256 of downloaded toolchain archives |
+| `skills/boox-bookorbit-setup/assets/koho/` | launcher source (one activity with a recovery chain) |
+| `skills/boox-bookorbit-setup/references/devices.md` | supported models and how to reach developer options on each |
+| `skills/boox-bookorbit-setup/references/lessons-learned.md` | pitfalls and mistakes from the original setup |
+| `.github/workflows/ci.yml` | shellcheck, tests, device-table validation, launcher build |
 
-No APK is shipped; build it yourself so you know what runs on your device.
+No APK is shipped; build it yourself so you know what runs on your device. The `koho` signing key is created
+on your machine in `~/.config/koho/` and must be kept: a different key makes `adb install -r` fail.
 
 ## Safety, honestly
 
 Boox Notes keeps notes in the app's private database. `adb` cannot read it, so **the skill cannot back
-your notes up for you**; you must export them in the app. The skill avoids destructive operations
-(`pm clear`, uninstall, factory reset, deleting outside the book folders) but **cannot guarantee**
-data safety. Use at your own risk, with a verified backup stored off the device.
+your notes up for you**; you must run the in-app backup, and the skill then verifies the copied file is
+intact (it cannot prove the backup is restorable, so also keep `.note` exports of irreplaceable notes). The
+skill forbids destructive operations (`pm clear`, uninstall, factory reset, recursive deletes; it moves files
+to a quarantine folder instead of deleting) but **cannot guarantee** data safety. Use at your own risk, with a
+verified backup stored off the device.
+
+Downloads of the Android toolchain are pinned by SHA-256. KOReader, its plugins and ZenOS are not pinned
+here because they change; the skill tells the agent to record their hashes and check signatures.
 
 ## Help support more devices
 
 Boox menus differ per model and firmware (on the Go 6, developer options are reached through the Apps
 tab and its hamburger menu; other models differ). If you set up a different model, please share the
-exact path you used: see [docs/devices.md](docs/devices.md), the **Device report** issue template and
-[CONTRIBUTING.md](CONTRIBUTING.md). Report what you tested and mark the rest as untested.
+exact path you used: see [the device table](skills/boox-bookorbit-setup/references/devices.md), the
+**Device report** issue template and [CONTRIBUTING.md](CONTRIBUTING.md). Report what you tested and mark the
+rest as untested.
 
 ## Known limitations
 
-- Boox **auto-freeze** disables third-party apps; it cannot be turned off over `adb`.
+- Boox **auto-freeze** disables third-party apps; it was not settable over `adb` on the tested firmware.
 - **Project: Title** and **ZenOS** are mutually incompatible; the skill uses ZenOS.
 - On Android 15 `pm set-home-activity` may be restricted (*untested*).
 - "Notes in the launcher menu" is a design in `SKILL.md`, **not implemented**.
 - Screenshots over `adb` do not work on Boox, so UI results need your confirmation.
+- Native Windows hosts and Linux on ARM are not supported by the build script.
 
 ## License
 

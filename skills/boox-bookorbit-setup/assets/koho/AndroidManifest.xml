@@ -3,6 +3,7 @@
     <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="30"/>
     <queries>
         <package android:name="org.koreader.launcher"/>
+        <package android:name="org.koreader.launcher.fdroid"/>
         <package android:name="com.onyx"/>
     </queries>
     <application android:label="KOReader Home" android:allowBackup="false">

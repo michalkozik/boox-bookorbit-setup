@@ -42,3 +42,14 @@
 - Notes are in the app's private database, unreachable over adb. Back up inside the app
   (Options → Backup and Restore → `/sdcard/note/backup/local`) and verify the copy.
 - Never `pm clear` / uninstall / reset while you hold unbacked notes.
+
+## Tooling lessons (added after review)
+- A build that regenerates its signing key breaks `adb install -r` (signature mismatch). Keep one keystore
+  outside the build output and never "fix" the mismatch by uninstalling the launcher that is HOME.
+- Blind `str.replace` on KOReader state files corrupts unrelated data; rewrite only path-prefix matches in an
+  allowlist of files, dry-run first, with a backup and collision checks.
+- `apksigner --ks-pass file:` reads a line from the file; a file without a trailing newline fails, and using
+  the same file for `--key-pass` consumes a second line, so omit `--key-pass` when both passwords match.
+- On macOS `/usr/libexec/java_home -v 11+` can still print an older JDK; check the version yourself.
+- Download archives to a staging directory, verify SHA-256, then promote atomically; a half-extracted cache
+  that looks complete cost builds before.
