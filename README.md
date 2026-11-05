@@ -55,6 +55,7 @@ adb shell pm set-home-activity com.onyx/.StartupActivity
 | `skills/boox-bookorbit-setup/scripts/rewrite-koreader-paths.py` | fixes book paths in KOReader state after moving books |
 | `skills/boox-bookorbit-setup/assets/koho/` | launcher source (one activity, ~25 lines) |
 | `docs/lessons-learned.md` | pitfalls and mistakes from the original setup |
+| `docs/devices.md` | supported models and how to reach developer options on each |
 
 No APK is shipped; build it yourself so you know what runs on your device.
 
@@ -64,6 +65,13 @@ Boox Notes keeps notes in the app's private database. `adb` cannot read it, so *
 your notes up for you**; you must export them in the app. The skill avoids destructive operations
 (`pm clear`, uninstall, factory reset, deleting outside the book folders) but **cannot guarantee**
 data safety. Use at your own risk, with a verified backup stored off the device.
+
+## Help support more devices
+
+Boox menus differ per model and firmware (on the Go 6, developer options are reached through the Apps
+tab and its hamburger menu; other models differ). If you set up a different model, please share the
+exact path you used: see [docs/devices.md](docs/devices.md), the **Device report** issue template and
+[CONTRIBUTING.md](CONTRIBUTING.md). Report what you tested and mark the rest as untested.
 
 ## Known limitations
 

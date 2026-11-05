@@ -1,0 +1,40 @@
+name: Device report
+description: Add or correct what is known about a Boox model/firmware
+title: "Device: <model> <firmware>"
+labels: ["device"]
+body:
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      placeholder: "Boox Note Air 5 C"
+    validations: {required: true}
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware (Settings → About Device → Version) and Android version
+    validations: {required: true}
+  - type: textarea
+    id: devmode
+    attributes:
+      label: How to reach developer options and USB debugging
+      description: Exact screens you tap, in order.
+    validations: {required: true}
+  - type: textarea
+    id: home
+    attributes:
+      label: Did the launcher step work?
+      description: Output of `pm set-home-activity io.github.michalkozik.koho/.Home` and of the HOME `resolve-activity` command.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes app backup path and anything different
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options: ["verified (full setup confirmed)", "partial", "untested"]
+    validations: {required: true}
+  - type: markdown
+    attributes:
+      value: Do not post serial numbers, MAC addresses, account names or server URLs.
